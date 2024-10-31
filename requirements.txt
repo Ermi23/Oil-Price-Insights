@@ -1,0 +1,15 @@
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+statsmodels
+scipy
+pymc3
+scikit-learn
+tensorflow
+flask
+flask-restful
+flask-cors
+react
+axios
