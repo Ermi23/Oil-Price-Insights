@@ -78,17 +78,18 @@ class EDA:
 
     def merge_economic_data(self, economic_data, on='Date'):
         """
-        Merge economic indicators with the main dataset on a common date column.
-        
+        Merge economic indicators or events with the main dataset on a common date column.
+
         Parameters:
-            economic_data (pd.DataFrame): Dataframe containing economic indicators.
+            economic_data (pd.DataFrame): Dataframe containing economic indicators or events.
             on (str): Column to merge on, typically 'Date'.
-            
+
         Returns:
-            pd.DataFrame: Merged dataset.
+            pd.DataFrame: Dataset with events or indicators as separate columns.
         """
-        self.data = self.data.merge(economic_data, on=on, how='left')
-        return self.data
+        # Perform a left join to keep all dates from the main data
+        self.data = self.data.merge(economic_data, on=on, how='left', indicator=False)
+
 
     def plot_correlation_matrix(self):
         """
