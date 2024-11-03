@@ -100,3 +100,48 @@ class EDA:
         sns.heatmap(correlation, annot=True, cmap='coolwarm', fmt='.2f')
         plt.title("Correlation Matrix of Brent Oil Prices and Economic Indicators")
         plt.show()
+
+    def calculate_event_impact(self, events_data, window=30):
+        """
+        Calculate the percentage change in oil prices around each event.
+
+        Parameters:
+            events_data (dict): Dictionary of events with dates and descriptions.
+            window (int): Number of days before and after each event to analyze.
+
+        Returns:
+            pd.DataFrame: DataFrame showing percentage change before and after each event.
+        """
+        impacts = []
+        
+        for event_date, event_name in events_data.items():
+            date = pd.to_datetime(event_date)
+            
+            # Check if the date is within the dataset range
+            if date not in self.data.index:
+                print(f"Data unavailable around {event_name} due to missing date")
+                continue
+            
+            try:
+                # Calculate prices before and after the event
+                price_before = self.data.loc[date - pd.Timedelta(days=window), 'Price']
+                price_after = self.data.loc[date + pd.Timedelta(days=window), 'Price']
+                
+                # Calculate percentage change only if prices are available
+                if pd.notna(price_before) and pd.notna(price_after):
+                    pct_change = ((price_after - price_before) / price_before) * 100
+                    impacts.append({
+                        'Event': event_name,
+                        'Date': date,
+                        'Price Before': price_before,
+                        'Price After': price_after,
+                        'Percentage Change (%)': pct_change
+                    })
+                else:
+                    print(f"Price data unavailable around {event_name} due to missing price")
+                    
+            except KeyError:
+                print(f"Data unavailable around {event_name} due to KeyError")
+                continue
+
+        return pd.DataFrame(impacts)
