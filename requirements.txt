@@ -19,3 +19,4 @@ seaborn
 pmdarima
 pymc3
 tensorflow
+shap
